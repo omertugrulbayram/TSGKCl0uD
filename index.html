@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Bulut Kaşifleri</title>
+  <meta charset="UTF-8" />
+  <title>Bulut Kaşifleri Frontend</title>
   <style>
     pre {
       background: #222;
@@ -10,6 +10,8 @@
       padding: 10px;
       max-height: 300px;
       overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
   </style>
 </head>
@@ -20,32 +22,32 @@
   <pre id="result"></pre>
 
   <script>
-    const API_KEY = "cERENhocamadamdır";  // Worker’daki API key ile aynı olmalı
+    const API_KEY = "cERENhocamadamdır";
+    const WORKER_URL = "https://tsgk.omertugrulbayram.workers.dev/";
 
     document.getElementById('getDataBtn').addEventListener('click', () => {
-      fetch(`https://tsgk.omertugrulbayram.workers.dev/?key=${API_KEY}`)
+      fetch(`${WORKER_URL}?key=${API_KEY}`)
         .then(response => {
           if (!response.ok) throw new Error("Erişim reddedildi veya hata oluştu");
           return response.json();
         })
         .then(data => {
           document.getElementById('result').textContent = JSON.stringify(data, null, 2);
-          
-          // API kullanımı sonrası Google Form’a log gönder
+
+          // Google Forms’a log gönderiyoruz frontend’den
           fetch('https://docs.google.com/forms/d/e/1FAIpQLScYNVCrFssQQ_0AbfXcIIy9t_l4RNJMLgsKtDg3ruDwFhX8QA/formResponse', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: new URLSearchParams({
-              'entry.1648753359': 'sibercim',                   // Kullanıcı adı
-              'entry.2065692405': new Date().toISOString(),     // Zaman
-              'entry.1602347687': 'API çağrısı başarıyla gerçekleşti' // Açıklama
+              'entry.1648753359': 'frontend_user',                     // Kullanıcı adı/etiket
+              'entry.2065692405': new Date().toISOString(),            // Zaman
+              'entry.1602347687': 'API çağrısı frontend’den loglandı'  // Açıklama
             })
           }).catch(e => {
-            console.warn('Log gönderilemedi:', e);
+            console.warn('Google Form log gönderilemedi:', e);
           });
-
         })
         .catch(error => {
           document.getElementById('result').textContent = error.message;
