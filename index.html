@@ -7,6 +7,25 @@
 <body>
   <h1>Bulut Kaşifleri Frontend</h1>
   <p>Verileri buradan alabilirsiniz</p>
-  <button onclick="alert('Buton çalışıyor!')">Verileri Getir</button>
+  <button id="getDataBtn">Verileri Getir</button>
+  <pre id="result"></pre>
+
+  <script>
+    const API_KEY = "cERENhocamadamdır"  // Worker'da ayarladığın API key buraya yaz
+
+    document.getElementById('getDataBtn').addEventListener('click', () => {
+      fetch(`https://tsgk.omertugrulbayram.workers.dev/?key=${API_KEY}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Erişim reddedildi veya hata oluştu")
+          return res.json()
+        })
+        .then(data => {
+          document.getElementById('result').textContent = JSON.stringify(data, null, 2)
+        })
+        .catch(err => {
+          document.getElementById('result').textContent = err.message
+        })
+    })
+  </script>
 </body>
 </html>
