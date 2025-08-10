@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Bulut Kaşifleri</title>
+  <style>
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 10px;
+      max-height: 300px;
+      overflow: auto;
+    }
+  </style>
 </head>
 <body>
   <h1>Bulut Kaşifleri Frontend</h1>
+  <p>Verileri buradan alabilirsiniz</p>
   <button id="getDataBtn">Verileri Getir</button>
   <pre id="result"></pre>
 
   <script>
-    const API_KEY = "cERENhocamadamdır";  // Worker’da kullandığın API key ile aynı olmalı
+    const API_KEY = "cERENhocamadamdır";  // Worker’daki API key ile aynı olmalı
 
     document.getElementById('getDataBtn').addEventListener('click', () => {
       fetch(`https://tsgk.omertugrulbayram.workers.dev/?key=${API_KEY}`)
@@ -20,6 +30,22 @@
         })
         .then(data => {
           document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+          
+          // API kullanımı sonrası Google Form’a log gönder
+          fetch('https://docs.google.com/forms/d/e/1FAIpQLScYNVCrFssQQ_0AbfXcIIy9t_l4RNJMLgsKtDg3ruDwFhX8QA/formResponse', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+              'entry.1648753359': 'sibercim',                   // Kullanıcı adı
+              'entry.2065692405': new Date().toISOString(),     // Zaman
+              'entry.1602347687': 'API çağrısı başarıyla gerçekleşti' // Açıklama
+            })
+          }).catch(e => {
+            console.warn('Log gönderilemedi:', e);
+          });
+
         })
         .catch(error => {
           document.getElementById('result').textContent = error.message;
@@ -28,5 +54,3 @@
   </script>
 </body>
 </html>
-
-
